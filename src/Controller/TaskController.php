@@ -15,29 +15,29 @@ class TaskController extends AbstractController
 {
 
     /**
-     * @Route("/tasks", name="task_list_notFinished")
+     * @Route("/tasks", name="task_list_todo")
      * 
      * @param TaskRepository $taskRepository
      * 
      * @return Response
      * 
      */
-    public function listActionNoFinished(TaskRepository $taskRepository)
+    public function listActionToDo(TaskRepository $taskRepository)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => false])]);
     }
 
     /**
-     * @Route("/tasks", name="task_list_finished")
+     * @Route("/tasks/done", name="task_list_done")
      * 
      * @param TaskRepository $taskRepository
      * 
      * @return Response
      * 
      */
-    public function listActionFinished(TaskRepository $taskRepository)
+    public function listActionDone(TaskRepository $taskRepository)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => true])]);
     }
 
     /**
@@ -69,7 +69,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list_todo');
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -95,7 +95,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list_todo');
         }
 
         return $this->render('task/edit.html.twig', [
@@ -108,17 +108,23 @@ class TaskController extends AbstractController
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      * 
      * @param Task $task
+     * @param EntityManagerInterface $manager
      * 
      * @return Response
      */
-    public function toggleTaskAction(Task $task)
+    public function toggleTaskAction(Task $task, EntityManagerInterface $manager)
     {
         $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $manager->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if($task->isDone() === true) {
+            $this->addFlash('success', sprintf('La tâche %s a bien été envoyée dans les tâches terminées.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list_todo');
+        }
+        $this->addFlash('success', sprintf('La tâche %s a bien été envoyée dans les tâches à faire.', $task->getTitle()));
+
+        return $this->redirectToRoute('task_list_done');
     }
 
     /**
@@ -131,12 +137,23 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $manager)
     {
-    
-        $manager->remove($task);
-        $manager->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        $user = $this->getUser();
+        $userRole = $user->getRoles();
+        //verify if the user is admin and task anonymous or if the user is the task owner
+        if ($task->getUser() == $this->getUser() || $task->getUser() === null && $userRole[0] == "ROLE_ADMIN") {
+                
+            $manager->remove($task);
+            $manager->flush();
 
-        return $this->redirectToRoute('task_list');
+            $this->addFlash('success', sprintf('La tâche %s a bien été supprimée.', $task->getTitle()));
+
+            if($task->isDone() === true) {
+                    return $this->redirectToRoute('task_list_done');
+                }
+            return $this->redirectToRoute('task_list_todo');
+        }
+
+        throw $this->createAccessDeniedException(); 
     }
 }

@@ -121,4 +121,14 @@ class Task
 
         return $this;
     }
+
+    public function toggle($flag)
+    {
+        $this->isDone = $flag;
+    }
+
+    public function isDone()
+    {
+        return $this->isDone;
+    }
 }
