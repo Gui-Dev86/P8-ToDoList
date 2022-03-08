@@ -13,15 +13,29 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TaskController extends AbstractController
 {
+
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks", name="task_list_notFinished")
      * 
      * @param TaskRepository $taskRepository
      * 
      * @return Response
      * 
      */
-    public function listAction(TaskRepository $taskRepository)
+    public function listActionNoFinished(TaskRepository $taskRepository)
+    {
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+    }
+
+    /**
+     * @Route("/tasks", name="task_list_finished")
+     * 
+     * @param TaskRepository $taskRepository
+     * 
+     * @return Response
+     * 
+     */
+    public function listActionFinished(TaskRepository $taskRepository)
     {
         return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
     }
