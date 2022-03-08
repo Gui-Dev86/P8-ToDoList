@@ -9,11 +9,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="task_list")
+     * 
+     * @param TaskRepository $taskRepository
+     * 
+     * @return Response
+     * 
      */
     public function listAction(TaskRepository $taskRepository)
     {
@@ -22,8 +28,14 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/create", name="task_create")
+     * 
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
+     * 
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, EntityManagerInterface $manager)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -31,10 +43,15 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
 
-            $em->persist($task);
-            $em->flush();
+            $createdAt = new \DateTime();
+
+            $task->setCreatedAt($createdAt)
+                ->setIsDone(false)
+                ->setUser($this->getUser());
+
+            $manager->persist($task);
+            $manager->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
@@ -46,15 +63,21 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * 
+     * @param Task $task
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
      */
-    public function editAction(Task $task, Request $request)
+    public function editAction(Task $task, Request $request, EntityManagerInterface $manager)
     {
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $manager->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
@@ -69,6 +92,10 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * 
+     * @param Task $task
+     * 
+     * @return Response
      */
     public function toggleTaskAction(Task $task)
     {
@@ -82,12 +109,17 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * 
+     * @param Task $task
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, EntityManagerInterface $manager)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+    
+        $manager->remove($task);
+        $manager->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 

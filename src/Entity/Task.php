@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
@@ -24,11 +25,25 @@ class Task
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank(
+     *      message = "Un nom de tâche est requis."
+     * )
+     * @Assert\Length(
+     *      max = 30,
+     *      maxMessage = "Le nom de votre tâche ne peut pas contenir plus de {{ limit }} caractères."
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=2000)
+     * @Assert\NotBlank(
+     *      message = "Une description de la tâche est requise."
+     * )
+     * @Assert\Length(
+     *      max = 2000,
+     *      maxMessage = "La description de votre tâche ne peut pas contenir plus de {{ limit }} caractères."
+     * )
      */
     private $content;
 

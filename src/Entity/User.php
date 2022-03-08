@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -22,7 +23,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=25, unique=true)
+     * @Assert\NotBlank(
+     *      message = "Ce champ est requis."
+     * )
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 25,
+     *      minMessage = "Votre nom d'utilisateur doit contenir au moins {{ limit }} caractères.",
+     *      maxMessage = "Votre nom d'utilisateur ne peut pas contenir plus de {{ limit }} caractères."
+     * )
      */
     private $username;
 
@@ -33,12 +43,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank(
+     *      message = "Ce champ est requis."
+     * )
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 64,
+     *      minMessage = "Votre mot de passe doit contenir au moins 6 caractères.",
+     *      maxMessage = "Votre mot de passe ne peut pas contenir plus de {{ limit }} caractères."
+     * )
+     * @Assert\Regex(
+     *     pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])^",
+     *     match = true,
+     *     message = "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre."
+     * )
      */
     private $password;
 
     /**
       * @ORM\Column(type="string", length=60, unique=true)
+      * @Assert\NotBlank(
+     *      message = "Ce champ est requis."
+     * )
+     * @Assert\Email(
+     *      message = "Veuillez entrer une adresse email valide."
+     * )
+     * @Assert\Length(
+     *      max = 60,
+     *      maxMessage = "Votre adresse email ne peut pas contenir plus de {{ limit }} caractères."
+     * )
      */
     private $email;
 

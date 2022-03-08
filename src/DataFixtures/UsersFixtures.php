@@ -23,7 +23,7 @@ class UsersFixtures extends Fixture
             
             $user = new User();
             $user->setUsername('username_' . $i)
-                ->setPassword($this->passwordHasher->hashPassword($user, 'azerty'))
+                ->setPassword($this->passwordHasher->hashPassword($user, 'Azerty!1'))
                 ->setEmail('username_' . $i . '@gmail.fr');
                 if ($i < 3) {
                     $user->setRoles(['ROLE_ADMIN']);

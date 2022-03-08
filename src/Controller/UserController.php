@@ -15,6 +15,10 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
+     * 
+     * @param UserRepository $UserRepository
+     * 
+     * @return Response
      */
     public function listAction(UserRepository $UserRepository)
     {
@@ -23,6 +27,11 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/create", name="user_create")
+     * 
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * 
+     * @return Response
      */
     public function createAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
@@ -49,6 +58,12 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     * 
+     * @param User $user
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * 
+     * @return Response
      */
     public function editAction(User $user, Request $request, UserPasswordEncoderInterface $encoder)
     {
