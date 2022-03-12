@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Tests\Entity;
+
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -82,7 +83,7 @@ class UserEntityTest extends KernelTestCase
 
         $errors = $this->getValidationErrors($user, 1);
 
-        $this->assertEquals(self::EMAIL_NOT_BLANK, $errors[0]->getMessage());
+        $this->assertEquals(self::PASSWORD_NOT_BLANK, $errors[0]->getMessage());
     }
 
     public function testUserEntityNoValidNoEmail(): void
@@ -98,7 +99,7 @@ class UserEntityTest extends KernelTestCase
 
         $errors = $this->getValidationErrors($user, 1);
 
-        $this->assertEquals(self::PASSWORD_NOT_BLANK, $errors[0]->getMessage());
+        $this->assertEquals(self::EMAIL_NOT_BLANK, $errors[0]->getMessage());
     }
 
     public function testUserEntityNoValidPasswordNoRegex(): void
