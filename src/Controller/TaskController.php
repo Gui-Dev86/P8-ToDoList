@@ -95,6 +95,9 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
+            if($task->isDone() === true) {
+                return $this->redirectToRoute('task_list_done');
+            }
             return $this->redirectToRoute('task_list_todo');
         }
 

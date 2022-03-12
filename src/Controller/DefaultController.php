@@ -9,9 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
+     * Show homepage
+     *
+     * @return Response
+     *
      * @Route("/", name="homepage")
      */
-    public function indexAction() : Response
+    public function showHomepage() : Response
     {
         return $this->render('default/index.html.twig');
     }
