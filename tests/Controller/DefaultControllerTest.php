@@ -2,9 +2,9 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestsService;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DefaultControllerTest extends TestsService
+class DefaultControllerTest extends WebTestCase
 {
     
     public function testHomePageRoute()
@@ -15,13 +15,6 @@ class DefaultControllerTest extends TestsService
         $client->followRedirect();
   
         self::assertEquals(200, $client->getResponse()->getStatusCode());
-    }
-
-    public function testHomePageConnected()
-    {
-        $this::createUserClient();
-        
-        static::assertSelectorTextContains('h1', "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !");
     }
     
     public function testErrorLink()
