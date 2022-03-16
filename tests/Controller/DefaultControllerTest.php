@@ -2,18 +2,35 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\TestsService;
 
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends TestsService
 {
-    public function testIndex()
+    
+    public function testHomePageRoute()
     {
-        $client = static::createClient();
-        $client->request('GET', '/');
+        $client = static::createClient(['environment' => 'test']);
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !");
+        $client->request('GET', '/');
+        $client->followRedirect();
+  
+        self::assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
+    public function testHomePageConnected()
+    {
+        $this::createUserClient();
+        
+        static::assertSelectorTextContains('h1', "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !");
+    }
+    
+    public function testErrorLink()
+    {
+        $client = static::createClient(['environment' => 'test']);
+
+        $client->request('GET', '/testErrorLink');
+        
+        self::assertEquals(404, $client->getResponse()->getStatusCode());
+    }
     
 }

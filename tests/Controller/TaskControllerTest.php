@@ -2,16 +2,18 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\TestsService;
 
-class TaskControllerTest extends WebTestCase
+class TaskControllerTest extends TestsService
 {
     public function testListTaskToDo(): void
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/tasks');
+        $client = static::createClient(['environment' => 'test']);
 
-        $this->assertResponseIsSuccessful();
+        $crawler = $client->request('GET', '/tasks');
+        
+        $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
         
     }
 }
