@@ -2,19 +2,32 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
     
-    public function testHomePageRoute()
+    public function testRouteHomePage()
+    {
+        $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        // retrieve the test user
+        $testUser = $userRepository->findOneByUsername('username_1');
+        // simulate $testUser being logged in
+        $client->loginUser($testUser);
+        $crawler = $client->request('GET', '/');
+        self::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !");
+    }
+
+    public function testRouteRedirectHomePage()
     {
         $client = static::createClient(['environment' => 'test']);
-
         $client->request('GET', '/');
         $client->followRedirect();
-  
         self::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('button', "Se connecter");    
     }
     
     public function testErrorLink()
