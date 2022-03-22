@@ -28,34 +28,12 @@ class UserType extends AbstractType
             ])
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
             ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Utilisateur' => "ROLE_USER",
-                    'Administrateur' => "ROLE_ADMIN",
-                ],
-                'label' => 'Rôle de l\'utilisateur',
+                'label' => "Choix du rôle",
+                'choices' => ['Administrateur' => 'ROLE_ADMIN', 'Utilisateur' => 'ROLE_USER'],
+                'multiple' => true,
                 'expanded' => true,
                 'required' => true,
-            ])
-        ;
-        $builder
-            ->get('roles')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($rolesAsArray) {
-                    // transform the array to a string
-                    return implode(', ', $rolesAsArray);
-                },
-                function ($rolesAsString) {
-                    // transform the string back to an array
-                    return explode(', ', $rolesAsString);
-                }
-            ))
-        ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-        ]);
+            ]);
+        ; 
     }
 }

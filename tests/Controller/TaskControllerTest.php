@@ -5,7 +5,6 @@ namespace App\Tests\Controller;
 use App\Entity\Task;
 use App\Repository\UserRepository;
 use App\Repository\TaskRepository;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TaskControllerTest extends WebTestCase
@@ -24,46 +23,79 @@ class TaskControllerTest extends WebTestCase
             ->getManager();
     }
 
-    public function testRouteListTaskToDo(): void
+    /**
+     * Test the tasks route for the tasks to do list if the user is connected
+     *
+     * @return void
+     */
+    public function testRouteListTasksToDo(): void
     { 
         $userRepository = static::getContainer()->get(UserRepository::class);
         // retrieve the test user
         $testUser = $userRepository->findOneByUsername('username_1');
         // simulate $testUser being logged in
         $this->client->loginUser($testUser);
+
         $crawler = $this->client->request('GET', '/tasks');
+
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.glyphicon-remove');
     }
 
-    public function testRouteRedirectListTaskToDo(): void
+    /**
+     * Test the redirect tasks route for the login page if the user isn't connected
+     *
+     * @return void
+     */
+    public function testRouteRedirectListTasksToDo(): void
     { 
         $crawler = $this->client->request('GET', '/tasks');
+
         $this->client->followRedirect();
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('button', "Se connecter");    
+        static::assertSelectorTextContains('button', "Se connecter");
     }
 
-    public function testRouteListTaskIsDone(): void
+    /**
+     * Test the tasks/done route for the tasks done list if the user is connected
+     *
+     * @return void
+     */
+    public function testRouteListTasksIsDone(): void
     { 
         $userRepository = static::getContainer()->get(UserRepository::class);
         // retrieve the test user
         $testUser = $userRepository->findOneByUsername('username_1');
         // simulate $testUser being logged in
         $this->client->loginUser($testUser);
+
         $crawler = $this->client->request('GET', '/tasks/done');
+
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.glyphicon-ok');
     }
 
-    public function testRouteRedirectListTaskIsDone(): void
+    /**
+     * Test the redirect tasks/done route for the login page if the user isn't connected
+     *
+     * @return void
+     */
+    public function testRouteRedirectListTasksIsDone(): void
     { 
         $crawler = $this->client->request('GET', '/tasks/done');
+
         $this->client->followRedirect();
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('button', "Se connecter");    
+        static::assertSelectorTextContains('button', "Se connecter");
     }
 
+    /**
+     * Test the create route for create a new task by an user connected
+     *
+     * @return void
+     */
     public function testCreateTask(): void
     { 
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -71,6 +103,7 @@ class TaskControllerTest extends WebTestCase
         $testUser = $userRepository->findOneByUsername('username_1');
         // simulate $testUser being logged in
         $this->client->loginUser($testUser);
+        
         $crawler = $this->client->request('GET', '/tasks/create');
 
         $form = $crawler->selectButton('Ajouter')->form();
@@ -90,14 +123,26 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testRouteRedirectCreate(): void
+    /**
+     * Test the redirect create route for the login page if the user isn't connected
+     *
+     * @return void
+     */
+    public function testRouteRedirectCreateTask(): void
     { 
         $crawler = $this->client->request('GET', '/tasks/create');
+
         $this->client->followRedirect();
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('button', "Se connecter");    
     }
 
+    /**
+     * Test the edit route for edit an ancient task by an user connected
+     *
+     * @return void
+     */
     public function testEditTask(): void
     { 
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -130,18 +175,30 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testRouteRedirectEdite(): void
+    /**
+     * Test the redirect edit route for the login page if the user isn't connected
+     *
+     * @return void
+     */
+    public function testRouteRedirectEditeTask(): void
     { 
         $task = $this->entityManager
             ->getRepository(Task::class)
             ->find(5);
 
         $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
+
         $this->client->followRedirect();
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('button', "Se connecter");    
     }
 
+    /**
+     * Test the delete route for delete a task by is own autor
+     *
+     * @return void
+     */
     public function testDeleteOwnTask(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -160,7 +217,7 @@ class TaskControllerTest extends WebTestCase
         $flashes = $session->getBag('flashes')->all();
         $this->assertArrayHasKey('success', $flashes);
         $this->assertCount(1, $flashes['success']);
-        $this->assertEquals("La tâche Title_10 a bien été supprimée.",
+        $this->assertEquals("La tâche ".$task->getTitle()." a bien été supprimée.",
         current($flashes['success']));
 
         $this->client->followRedirect();
@@ -168,6 +225,11 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test the delete route for delete a task by an other autor (error)
+     *
+     * @return void
+     */
     public function testDeleteOtherTask(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -185,6 +247,11 @@ class TaskControllerTest extends WebTestCase
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
+     /**
+     * Test the delete route for delete an anonyme task by an admin
+     *
+     * @return void
+     */
     public function testAdminDeleteAnonymeTask(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -204,7 +271,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertArrayHasKey('success', $flashes);
         $this->assertCount(1, $flashes['success']);
         $this->assertEquals(
-            "La tâche Title_2 a bien été supprimée.",
+            "La tâche ".$task->getTitle()." a bien été supprimée.",
             current($flashes['success'])
         );
 
@@ -213,6 +280,11 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
+     /**
+     * Test the delete route for delete an anonyme task by an user (error)
+     *
+     * @return void
+     */
     public function testUserDeleteAnonymeTask(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -230,36 +302,104 @@ class TaskControllerTest extends WebTestCase
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testRouteRedirectDelete(): void
+    /**
+     * Test the redirect delete route for the login page if the user isn't connected
+     *
+     * @return void
+     */
+    public function testRouteRedirectDeleteTask(): void
     { 
         $task = $this->entityManager
             ->getRepository(Task::class)
             ->find(32);
 
         $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
+
         $this->client->followRedirect();
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('button', "Se connecter");    
     }
-/*
-    public function testTogleToDo(): void
-    {
 
+     /**
+     * Test the redirect toggle route for pass a task in "done"
+     *
+     * @return void
+     */
+    public function testToggleTaskIsDone(): void
+    {
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        // retrieve the test user
+        $testUser = $userRepository->findOneByUsername('username_3');
+        // simulate $testUser being logged in
+        $this->client->loginUser($testUser);
+
+        $task = $this->entityManager
+            ->getRepository(Task::class)
+            ->find(17);
+
+        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
+        
+        $session = $this->client->getContainer()->get('session');
+        $flashes = $session->getBag('flashes')->all();
+        $this->assertArrayHasKey('success', $flashes);
+        $this->assertCount(1, $flashes['success']);
+        $this->assertEquals(
+            "La tâche ".$task->getTitle()." a bien été envoyée dans les tâches terminées.",
+            current($flashes['success'])
+        );
+        $this->client->followRedirect();
+        // request the route to initiate the task in "to do" in the database to test again
+        $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
     }
 
-    public function testTogleIsDone(): void
+    /**
+     * Test the redirect toggle route for pass a task in "to do"
+     *
+     * @return void
+     */
+    public function testToggleTaskToDo(): void
     {
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        // retrieve the test user
+        $testUser = $userRepository->findOneByUsername('username_3');
+        // simulate $testUser being logged in
+        $this->client->loginUser($testUser);
 
+        $task = $this->entityManager
+            ->getRepository(Task::class)
+            ->find(9);
+
+        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
+
+        $session = $this->client->getContainer()->get('session');
+        $flashes = $session->getBag('flashes')->all();
+        $this->assertArrayHasKey('success', $flashes);
+        $this->assertCount(1, $flashes['success']);
+        $this->assertEquals(
+            'La tâche '.$task->getTitle().' a bien été envoyée dans les tâches à faire.',
+            current($flashes['success'])
+        );
+        $this->client->followRedirect();
+        // request the route to initiate the task in "done" in the database to test again
+        $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
     }
-*/
-    public function testRouteRedirectToggle(): void
+
+    /**
+     * Test the redirect toggle route for the login page if the user isn't connected
+     *
+     * @return void
+     */
+    public function testRouteRedirectToggleTask(): void
     { 
         $task = $this->entityManager
             ->getRepository(Task::class)
             ->find(41);
 
         $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
+
         $this->client->followRedirect();
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('button', "Se connecter");    
     }
