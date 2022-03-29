@@ -43,8 +43,10 @@ exemple : DATABASE_TEST_URL="mysql://utilisateur(root de base):mot de passe(vide
 ```
 php bin/console doctrine:database:create
 ```
+```
 php bin/console doctrine:database:create --connection=test
 ```
+````
 Générez le fichier de migration des tables de la base de données:
 ```
 php bin/console doctrine:migrations:diff
