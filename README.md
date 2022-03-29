@@ -46,7 +46,6 @@ php bin/console doctrine:database:create
 ```
 php bin/console doctrine:database:create --connection=test
 ```
-```
 Générez le fichier de migration des tables de la base de données:
 ```
 php bin/console doctrine:migrations:diff
@@ -59,6 +58,7 @@ Effectuez à nouveau les opérations pour la base de données de tests:
 ```
 php bin/console doctrine:migrations:diff --em=test
 ```
+```
 php bin/console doctrine:migrations:migrate --em=test
 ```
 - Si vous souhaitez installer des données fictives afin de bénéficier d'une démo vous pouvez installer les fixtures:
@@ -66,7 +66,7 @@ php bin/console doctrine:migrations:migrate --em=test
 php bin/console doctrine:fixtures:load
 ```
 Sélectionnez "yes" pour continuer.
-```
+
 Effectuez à nouveau l'opération pour la base de données de tests :
 ```
 php bin/console doctrine:fixtures:load --em=test
