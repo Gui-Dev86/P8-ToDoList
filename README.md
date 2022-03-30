@@ -14,6 +14,7 @@ Codacy
         - Apache 2.4.46
         - PHP 8.1.4
         - MySQL 5.7.31
+    - PhpMyAdmin 5.1.3
 
 ## Installation
 
@@ -54,10 +55,7 @@ Effectez la migration vers la base de données :
 ```
 php bin/console doctrine:migrations:migrate
 ```
-Effectuez à nouveau les opérations pour la base de données de tests:
-```
-php bin/console doctrine:migrations:diff --em=test
-```
+Effectuez à nouveau la migration pour la base de données de tests:
 ```
 php bin/console doctrine:migrations:migrate --em=test
 ```
