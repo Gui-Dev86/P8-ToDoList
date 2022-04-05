@@ -140,7 +140,7 @@ class UserControllerTest extends WebTestCase
      */
     public function testRouteRedirectCreateUser(): void
     { 
-        $crawler = $this->client->request('GET', '/users/create');
+        $this->client->request('GET', '/users/create');
 
         $this->client->followRedirect();
 
@@ -222,7 +222,7 @@ class UserControllerTest extends WebTestCase
             ->getRepository(User::class)
             ->find(7);
 
-        $crawler = $this->client->request('GET', '/users/'.$user->getId().'/edit');
+        $this->client->request('GET', '/users/'.$user->getId().'/edit');
 
         $this->client->followRedirect();
 

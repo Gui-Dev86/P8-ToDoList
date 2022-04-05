@@ -36,7 +36,7 @@ class TaskControllerTest extends WebTestCase
         // simulate $testUser being logged in
         $this->client->loginUser($testUser);
 
-        $crawler = $this->client->request('GET', '/tasks');
+        $this->client->request('GET', '/tasks');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.glyphicon-remove');
@@ -49,7 +49,7 @@ class TaskControllerTest extends WebTestCase
      */
     public function testRouteRedirectListTasksToDo(): void
     { 
-        $crawler = $this->client->request('GET', '/tasks');
+       $this->client->request('GET', '/tasks');
 
         $this->client->followRedirect();
 
@@ -70,7 +70,7 @@ class TaskControllerTest extends WebTestCase
         // simulate $testUser being logged in
         $this->client->loginUser($testUser);
 
-        $crawler = $this->client->request('GET', '/tasks/done');
+        $this->client->request('GET', '/tasks/done');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.glyphicon-ok');
@@ -83,7 +83,7 @@ class TaskControllerTest extends WebTestCase
      */
     public function testRouteRedirectListTasksIsDone(): void
     { 
-        $crawler = $this->client->request('GET', '/tasks/done');
+        $this->client->request('GET', '/tasks/done');
 
         $this->client->followRedirect();
 
@@ -130,7 +130,7 @@ class TaskControllerTest extends WebTestCase
      */
     public function testRouteRedirectCreateTask(): void
     { 
-        $crawler = $this->client->request('GET', '/tasks/create');
+        $this->client->request('GET', '/tasks/create');
 
         $this->client->followRedirect();
 
@@ -186,7 +186,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(5);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
 
         $this->client->followRedirect();
 
@@ -211,7 +211,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(10);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
         
         $session = $this->client->getContainer()->get('session');
         $flashes = $session->getBag('flashes')->all();
@@ -242,7 +242,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(14);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
 
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -264,7 +264,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(2);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
 
         $session = $this->client->getContainer()->get('session');
         $flashes = $session->getBag('flashes')->all();
@@ -297,7 +297,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(3);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
 
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -313,7 +313,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(32);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
 
         $this->client->followRedirect();
 
@@ -338,7 +338,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(17);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
         
         $session = $this->client->getContainer()->get('session');
         $flashes = $session->getBag('flashes')->all();
@@ -370,7 +370,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(9);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
 
         $session = $this->client->getContainer()->get('session');
         $flashes = $session->getBag('flashes')->all();
@@ -396,7 +396,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->find(41);
 
-        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
+        $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
 
         $this->client->followRedirect();
 
