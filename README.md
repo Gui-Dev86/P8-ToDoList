@@ -34,42 +34,23 @@ Pour paramétrer votre base de données principale, modifiez cette ligne avec le
 
 exemple : DATABASE_URL="mysql://utilisateur(root de base):mot de passe(vide de base)@127.0.0.1:3306/(nom de la base de données, ici todolist)
 
-Pour réaliser les tests du site il est préférable de créer une copie de la base de données afin de ne pas interférer avec la base de données principale du site. Pour paramétrer votre base de données de test, modifiez cette ligne avec le nom d'utilisateur, mot de passe et nom de la base de données correspondant (ne pas oublier de retirer le # devant la ligne afin qu'elle soit prise en compte).
-
-    # DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7"
-
-exemple : DATABASE_TEST_URL="mysql://utilisateur(root de base):mot de passe(vide de base)@127.0.0.1:3306/(nom de la base de données, ici todolist_test)
-
 - Si elle n'existe pas déjà créez les bases de données, depuis le répertoire du projet utilisez les commande:
 ```
 php bin/console doctrine:database:create
 ```
-```
-php bin/console doctrine:database:create --connection=test
-```
 Générez le fichier de migration des tables de la base de données:
 ```
-php bin/console doctrine:migrations:diff
+php bin/console make:migration
 ```
-Effectez la migration vers la base de données :
+Effectuez la migration vers la base de données :
 ```
 php bin/console doctrine:migrations:migrate
-```
-Effectuez à nouveau la migration pour la base de données de tests:
-```
-php bin/console doctrine:migrations:migrate --em=test
 ```
 - Si vous souhaitez installer des données fictives afin de bénéficier d'une démo vous pouvez installer les fixtures:
 ```
 php bin/console doctrine:fixtures:load
 ```
 Sélectionnez "yes" pour continuer.
-
-Effectuez à nouveau l'opération pour la base de données de tests :
-```
-php bin/console doctrine:fixtures:load --em=test
-```
-Sélectionnez à nouveau "yes" pour continuer.
 
 Les deux premiers utilisateurs créés sont fixes et possèdent les droits d'administrateur afin de pouvoir tester toutes les fonctionnalités du site:
 
@@ -79,7 +60,7 @@ mot de passe: Azerty!1
 pseudo: username_2
 mot de passe: Azerty!1
 
-Les huit utilisateurs suivant créés sont de simples utilisateurs afin de tester; entre autre; les droits d'aacès aux administrateurs:
+Les huit utilisateurs suivant créés sont de simples utilisateurs afin de tester; entre autre; les droits d'accès aux administrateurs:
 
 pseudo: username_3
 mot de passe: Azerty!1
@@ -88,6 +69,9 @@ pseudo: username_4
 mot de passe: Azerty!1
 
 etc
+
+Pour réaliser les tests du site il est préférable de créer une copie de la base de données afin de ne pas interférer avec la base de données principale du site. Pour cela rendez-vous dans votre phpMyAdmin, une fois dans votre base de données "todolist" exportez là afin de créer un fichier "todolist.sql". Il ne reste plus qu'à créer une nouvelle base de données appelée "todolist_test" et y importer le fichier "todolist.sql" précédemment créé afin d'obtenir une copie de la base de données "todolist". Celle-ci sera la cible des tests de l'application.
+
 
 Le projet est maintenant correctemont installé. Pour le lancer déplacez vous dans le répertoire du projet et utilisez la commande :
 ```
