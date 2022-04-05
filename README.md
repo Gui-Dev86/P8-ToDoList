@@ -1,5 +1,7 @@
 ## OpenclassRooms - Formation PHP/Symfony Projet 8 - Améliorez un projet existant
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/30bc5c7eedf34ddda71af577cf2627b9)](https://app.codacy.com/gh/Gui-Dev86/P8-ToDoList?utm_source=github.com&utm_medium=referral&utm_content=Gui-Dev86/P8-ToDoList&utm_campaign=Badge_Grade_Settings)
+
 ## ToDo & Co
 
 Codacy
