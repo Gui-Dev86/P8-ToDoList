@@ -4,21 +4,21 @@
 
 Codacy
 
-
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a3855bb5a3fa46f997bc85928f80283c)](https://www.codacy.com/gh/Gui-Dev86/P8-ToDoList/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Gui-Dev86/P8-ToDoList&amp;utm_campaign=Badge_Grade)
 
 ## Environnement de développement:
-    - Symfony 5.3
+    - Symfony 5.4
     - Bootstrap 4.4
     - Composer 1.11
     - WampServer 3.2.8
-        - Apache 2.4.46
-        - PHP 8.1.4
-        - MySQL 5.7.31
+        - Apache 2.4.51
+        - PHP 8.1.0
+        - MySQL 5.7.36
     - PhpMyAdmin 5.1.3
 
 ## Installation
 
-- Cloner le Repositary GitHub dans le dossier de votre choix: 
+- Cloner le Repositary GitHub dans le dossier de votre choix:
 ```
 git clone https://github.com/Gui-Dev86/P8-ToDoList.git
 ```
