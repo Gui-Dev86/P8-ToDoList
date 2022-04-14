@@ -139,11 +139,11 @@ class TaskControllerTest extends WebTestCase
     }
 
     /**
-     * Test the edit route for edit an ancient task by an user connected
+     * Test the edit route for edit an ancient task "to do" by an user connected
      *
      * @return void
      */
-    public function testEditTask(): void
+    public function testEditTaskToDo(): void
     { 
         $userRepository = static::getContainer()->get(UserRepository::class);
         // retrieve the test user
@@ -173,6 +173,45 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.glyphicon-remove');
+    }
+
+    /**
+     * Test the edit route for edit an ancient task "is Done" by an user connected
+     *
+     * @return void
+     */
+    public function testEditTaskIsDone(): void
+    { 
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        // retrieve the test user
+        $testUser = $userRepository->findOneByUsername('username_1');
+        // simulate $testUser being logged in
+        $this->client->loginUser($testUser);
+
+        $task = $this->entityManager
+            ->getRepository(Task::class)
+            ->find(27);
+        
+        $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
+        
+        $form = $crawler->selectButton('Modifier')->form();
+        $form['task[title]'] = 'Titre mofifié test';
+        $form['task[content]'] = 'Contenu modifié test';
+        $crawler = $this->client->submit($form);
+
+        $session = $this->client->getContainer()->get('session');
+        $flashes = $session->getBag('flashes')->all();
+        
+        $this->assertArrayHasKey('success', $flashes);
+        $this->assertCount(1, $flashes['success']);
+        $this->assertEquals('La tâche a bien été modifiée.',
+        current($flashes['success']));
+
+        $this->client->followRedirect();
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.glyphicon-ok');
     }
 
     /**

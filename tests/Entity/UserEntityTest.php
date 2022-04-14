@@ -3,6 +3,7 @@
 namespace App\Tests\Entity;
 
 use App\Entity\User;
+use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -43,7 +44,7 @@ class UserEntityTest extends KernelTestCase
         $user = new User();
 
         $user->setUsername(self::USERNAME_VALID_VALUE);
-        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUsername());
+        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUserIdentifier());
         $user->setEmail(self::EMAIL_VALID_VALUE);
         $this->assertEquals(self::EMAIL_VALID_VALUE, $user->getEmail());
         $user->setPassword(self::PASSWORD_VALID_VALUE);
@@ -75,7 +76,7 @@ class UserEntityTest extends KernelTestCase
         $user = new User();
 
         $user->setUsername(self::USERNAME_VALID_VALUE);
-        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUsername());
+        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUserIdentifier());
         $user->setEmail(self::EMAIL_VALID_VALUE);
         $this->assertEquals(self::EMAIL_VALID_VALUE, $user->getEmail());
         $user->setRoles(self::USER_ROLES);
@@ -91,7 +92,7 @@ class UserEntityTest extends KernelTestCase
         $user = new User();
 
         $user->setUsername(self::USERNAME_VALID_VALUE);
-        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUsername());
+        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUserIdentifier());
         $user->setPassword(self::PASSWORD_VALID_VALUE);
         $this->assertEquals(self::PASSWORD_VALID_VALUE, $user->getPassword());
         $user->setRoles(self::USER_ROLES);
@@ -107,7 +108,7 @@ class UserEntityTest extends KernelTestCase
         $user = new User();
         
         $user->setUsername(self::USERNAME_VALID_VALUE);
-        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUsername());
+        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUserIdentifier());
         $user->setEmail(self::EMAIL_VALID_VALUE);
         $this->assertEquals(self::EMAIL_VALID_VALUE, $user->getEmail());
         $user->setPassword(self::PASSWORD_INVALID_VALUE);
@@ -125,7 +126,7 @@ class UserEntityTest extends KernelTestCase
         $user = new User();
         
         $user->setUsername(self::USERNAME_VALID_VALUE);
-        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUsername());
+        $this->assertEquals(self::USERNAME_VALID_VALUE, $user->getUserIdentifier());
         $user->setEmail(self::EMAIL_INVALID_VALUE);
         $this->assertEquals(self::EMAIL_INVALID_VALUE, $user->getEmail());
         $user->setPassword(self::PASSWORD_VALID_VALUE);
@@ -136,6 +137,21 @@ class UserEntityTest extends KernelTestCase
         $errors = $this->getValidationErrors($user, 1);
 
         $this->assertEquals(self::EMAIL_INVALID, $errors[0]->getMessage());
+    }
+
+    public function testTasks(): void
+    {
+        $this->user = new User();
+        $this->task = new Task();
+
+        $tasks = $this->user->getTasks($this->task->getUser());
+        $this->assertSame($this->user->getTasks(), $tasks);
+
+        $this->user->addtask($this->task);
+        $this->assertCount(1, $this->user->getTasks());
+
+        $this->user->removeTask($this->task);
+        $this->assertCount(0, $this->user->getTasks());
     }
 
     private function getValidationErrors(User $user, int $numberOfExpectedErrors): ConstraintViolationList
