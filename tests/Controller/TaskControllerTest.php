@@ -158,8 +158,8 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
         
         $form = $crawler->selectButton('Modifier')->form();
-        $form['task[title]'] = 'Titre mofifié test';
-        $form['task[content]'] = 'Contenu modifié test';
+        $form['task[title]'] = 'Titre mofifié test To Do';
+        $form['task[content]'] = 'Contenu modifié test To Do';
         $crawler = $this->client->submit($form);
 
         $session = $this->client->getContainer()->get('session');
@@ -196,8 +196,8 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/tasks/'.$task->getId().'/edit');
         
         $form = $crawler->selectButton('Modifier')->form();
-        $form['task[title]'] = 'Titre mofifié test';
-        $form['task[content]'] = 'Contenu modifié test';
+        $form['task[title]'] = 'Titre mofifié test Is Done';
+        $form['task[content]'] = 'Contenu modifié test Is Done';
         $crawler = $this->client->submit($form);
 
         $session = $this->client->getContainer()->get('session');
