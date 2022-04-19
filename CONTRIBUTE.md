@@ -6,15 +6,8 @@ Afin de contribuer au projet ToDoList veuillez prendre connaissance de ce docume
 
 Afin de participer au projet voici le processus afin de créer une Pull Request:
 
- - Fork le projet
-```
-    	git clone https://github.com/Gui-Dev86/P8-ToDoList.git
-```
-- Rentrez vous dans le dossier du projet puis configurez les remotes afin de créer une copie du dépôt de référence dans lequel vous aurez tous les droits:
-```
-        cd P8-Todolist
-    	git remote add upstream https://github.com/Gui-Dev86/P8-ToDoList.git
-```
+- Assurez vous de lire le fichier README.MD afin de déployer correctement le projet
+
 - Créez une branche dans laquelle vous travaillerez :
 ```
         git branch nom de la branche
