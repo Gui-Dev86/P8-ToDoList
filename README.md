@@ -74,7 +74,7 @@ Pour réaliser les tests du site il est préférable de créer une copie de la b
 
 Pour vérifier le niveau de couverture de test en générant la documentation il est nécessaire d'installer XDebug ([Documentation d'installation](https://xdebug.org/docs/install)).
 
-Voici la commande qui génèrera la documentation de couverture de test dans le dossier reports/ :
+Voici la commande qui générera la documentation de couverture de test dans le dossier reports/ :
 ```
 vendor\bin\phpunit --coverage-html reports/   
 ```
@@ -89,9 +89,9 @@ sc.exe start Blackfire
 sc.exe stop Blackfire
 
 ```
-Pour pourrez ensuite utiliser l'extension Blackfire que vous aurez installé afin de générer une documentation sur le niveau de performance de l'application.
+Pour pourrez ensuite utiliser l'extension Blackfire que vous aurez installé dans votre navigateur web afin de générer une documentation sur le niveau de performance de l'application.
 
-Si vous souhaitez lancer les tests unitaires/fonctionels d'une entité ou d'un controller voici deux exemples de commande à utiliser:
+Si vous souhaitez lancer les tests unitaires/fonctionnels d'une entité ou d'un controller voici deux exemples de commande à utiliser:
 ```
 php bin/phpunit tests/Entity/TaskEntityTest.php
 ```
