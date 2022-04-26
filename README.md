@@ -72,6 +72,33 @@ etc
 
 Pour réaliser les tests du site il est préférable de créer une copie de la base de données afin de ne pas interférer avec la base de données principale du site. Pour cela rendez-vous dans votre phpMyAdmin, une fois dans votre base de données "todolist" exportez là afin de créer un fichier "todolist.sql". Il ne reste plus qu'à créer une nouvelle base de données appelée "todolist_test" et y importer le fichier "todolist.sql" précédemment créé afin d'obtenir une copie de la base de données "todolist". Celle-ci sera la cible des tests de l'application.
 
+Pour vérifier le niveau de couverture de test en générant la documentation il est nécessaire d'installer XDebug ([Documentation d'installation](https://xdebug.org/docs/install)).
+
+Voici la commande qui génèrera la documentation de couverture de test dans le dossier reports/ :
+```
+vendor\bin\phpunit --coverage-html reports/   
+```
+Pour vérifier le niveau de performance de l'application vous pouvez utiliser Blackfire ([Documentation d'installation](https://blackfire.io/docs/up-and-running/installation?action=install&mode=full&version=latest&mode=quick&location=local&os=windows&language=php&agent=1123bc2b-a7e3-4847-936f-0854fc75cdc1)).
+
+Vous devrez ensuite vous rendre dans votre terminal de commande en mode administrateur afin de pouvoir lancer ou stopper Blackfire à l'aide de ces commandes:
+```
+sc.exe start Blackfire
+
+```
+```
+sc.exe stop Blackfire
+
+```
+Pour pourrez ensuite utiliser l'extension Blackfire que vous aurez installé afin de générer une documentation sur le niveau de performance de l'application.
+
+Si vous souhaitez lancer les tests unitaires/fonctionels d'une entité ou d'un controller voici deux exemples de commande à utiliser:
+```
+php bin/phpunit tests/Entity/TaskEntityTest.php
+```
+```
+php bin/phpunit tests/Controller/TaskControllerTest.php
+```
+Attention, les tests influent sur la base de données de test pour les relancer il peut-être nécessaire d'importer à nouveau le fichier .sql afin de la réinitialiser.
 
 Le projet est maintenant correctemont installé. Pour le lancer déplacez vous dans le répertoire du projet et utilisez la commande :
 ```
